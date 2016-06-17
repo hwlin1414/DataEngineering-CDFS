@@ -46,6 +46,9 @@ $config = [
             'rules' => [
                 'drive/' => 'drive/index',
                 'drive/<path:.*>' => 'drive/index',
+                'error/' => 'site/error',
+                'login/' => 'site/login',
+                'logout/' => 'site/logout',
             ],
         ],
         //*/
