@@ -33,24 +33,20 @@ AppAsset::register($this);
             'class' => 'nav-left',
         ],
     ]);
+    //$items = Yii::$app->user->isGuest ? ([
+    //        ['label' => 'Login', 'url' => ['/site/login']]
+    //    ]) : ([
+    //        ['label' => 'Home', 'url' => ['/drive/index']],
+    //        ['label' => 'Logout (' . Yii::$app->user->identity->name . ')', 'url' => ['/site/logout']],
+    //    ]);
+    $items = Yii::$app->user->isGuest ? ([
+        ]) : ([
+            ['label' => 'Logout (' . Yii::$app->user->identity->name . ')', 'url' => ['/site/logout']],
+        ]);
+
     echo Nav::widget([
         'options' => ['class' => 'nav-right nav-menu'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post', ['class' => 'navbar-form'])
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' => $items,
     ]);
     NavBar::end();
     ?>
