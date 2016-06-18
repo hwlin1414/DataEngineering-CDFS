@@ -44,7 +44,6 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'drive/' => 'drive/index',
                 'drive/<path:.*>' => 'drive/index',
                 'error/' => 'site/error',
                 'login/' => 'site/login',

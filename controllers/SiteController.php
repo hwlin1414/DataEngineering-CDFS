@@ -26,7 +26,7 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->redirect(['drive/index']);
+        return $this->redirect(['drive/']);
     }
 
     public function actionLogin()

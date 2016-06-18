@@ -36,7 +36,7 @@ AppAsset::register($this);
     //$items = Yii::$app->user->isGuest ? ([
     //        ['label' => 'Login', 'url' => ['/site/login']]
     //    ]) : ([
-    //        ['label' => 'Home', 'url' => ['/drive/index']],
+    //        ['label' => 'Home', 'url' => ['/drive']],
     //        ['label' => 'Logout (' . Yii::$app->user->identity->name . ')', 'url' => ['/site/logout']],
     //    ]);
     $items = Yii::$app->user->isGuest ? ([
@@ -53,7 +53,7 @@ AppAsset::register($this);
 
     <div class="container">
         <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [''],
         ]) ?>
         <?= $content ?>
     </div>
