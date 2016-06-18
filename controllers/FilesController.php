@@ -3,11 +3,14 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\Dirs;
 use app\models\Files;
+use app\models\Uploads;
 use app\models\search\Files as FilesSearch;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * FilesController implements the CRUD actions for Files model.
@@ -36,7 +39,8 @@ class FilesController extends Controller
      */
     public function actionView($id)
     {
-        Yii::$app->response->sendFile('uploads/' . $id)->send();
+        $model = $this->findModel($id);
+        Yii::$app->response->sendFile('../uploads/' . $id, $model->name)->send();
         return;
     }
 
@@ -47,23 +51,30 @@ class FilesController extends Controller
      */
     public function actionCreate($dir = null)
     {
-        $model = new Files(['scenario' => 'create']);
 
-        if ($model->load(Yii::$app->request->post())){
-            $model->user_id = Yii::$app->user->identity->id;
-            $model->dir_id = $dir;
-            $model->save();
+        $model = new Uploads();
+        if (Yii::$app->request->isPost || Yii::$app->request->isAjax){
+            $model->files = UploadedFile::getInstances($model, 'files');
+            $result = $model->upload($dir);
+
+            if(Yii::$app->request->isAjax){
+                echo $result;
+                exit();
+            }
 
             $path = '';
-            if($model->dir != null) $path = $model->dir->path;
+            if($dir != null) $path = Dirs::findOne($dir)->path;
 
             return $this->redirect([
                 '/drive/index',
                 'path' => $path,
             ]);
         } else {
+            $dirs = [];
+            if($dir != null) $dirs = Dirs::findOne($dir)->parents;
             return $this->render('create', [
                 'model' => $model,
+                'dirs' => $dirs,
             ]);
         }
     }
@@ -89,8 +100,11 @@ class FilesController extends Controller
                 'path' => $path,
             ]);
         } else {
+            $dirs = [];
+            if($model->dir != null) $dirs = $model->dir->parents;
             return $this->render('update', [
                 'model' => $model,
+                'dirs' => $dirs,
             ]);
         }
     }
@@ -108,6 +122,7 @@ class FilesController extends Controller
         $model = $this->findModel($id);
         if($model->dir != null) $path = $model->dir->path;
         $model->delete();
+        unlink("../uploads/{$id}");
 
         return $this->redirect(['/drive/index', 'path' => $path]);
     }

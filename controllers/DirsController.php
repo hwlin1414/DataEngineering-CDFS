@@ -36,6 +36,9 @@ class DirsController extends Controller
      */
     public function actionCreate($dir = null)
     {
+        $model2 = null;
+        if($dir != null) $model2 = $this->findModel($dir);
+
         $model = new Dirs(['scenario' => 'create']);
 
         if ($model->load(Yii::$app->request->post())){
@@ -49,6 +52,7 @@ class DirsController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'dirs' => ($model2 == null)?([]):($model2->parents),
             ]);
         }
     }
@@ -73,6 +77,7 @@ class DirsController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'dirs' => $model->parents,
             ]);
         }
     }

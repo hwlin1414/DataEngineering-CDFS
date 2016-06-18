@@ -25,32 +25,20 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <?php
-    NavBar::begin([
-        'brandLabel' => 'Cloud Distributed Filesystem',
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'nav-left',
-        ],
-    ]);
-    //$items = Yii::$app->user->isGuest ? ([
-    //        ['label' => 'Login', 'url' => ['/site/login']]
-    //    ]) : ([
-    //        ['label' => 'Home', 'url' => ['/drive']],
-    //        ['label' => 'Logout (' . Yii::$app->user->identity->name . ')', 'url' => ['/site/logout']],
-    //    ]);
-    $items = Yii::$app->user->isGuest ? ([
-        ]) : ([
-            ['label' => 'Logout (' . Yii::$app->user->identity->name . ')', 'url' => ['/site/logout']],
-        ]);
+<nav class="nav has-shadow">
+    <div class="container">
+        <div class="nav-left">
+            <?= Html::a('Cloud Distributed Filesystem', ['/site/index'], ['class' => 'tag is-info is-large']) ?>
+        </div>
 
-    echo Nav::widget([
-        'options' => ['class' => 'nav-right nav-menu'],
-        'items' => $items,
-    ]);
-    NavBar::end();
-    ?>
-
+        <div class="nav-right nav-menu">
+            <?php
+                if( !Yii::$app->user->isGuest)
+                    echo Html::a('Logout (' . Yii::$app->user->identity->name . ')', ['/site/logout'], ['class' => 'nav-item']);
+            ?>
+        </div>
+    </div>
+</nav>
     <div class="container">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [''],

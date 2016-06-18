@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
@@ -11,12 +12,12 @@ $this->title = '雲端檔案';
 foreach($dirs as $dir){
     $this->params['breadcrumbs'][] = [
         'label' => $dir->name,
-        'url' => ['index', 'path' => $dir->path]
+        'url' => ['/drive/index', 'path' => $dir->path]
     ];
 }
 
 ?>
-<div class="files-index">
+<div class="files-index" id='fileIndex'>
     <div class="columns">
         <div class="column is-4">
             <nav class="panel">
@@ -88,6 +89,73 @@ foreach($dirs as $dir){
             <p>
                 <?= Html::a('上傳', ['/files/create', 'dir' => $dir_id], ['class' => 'button is-success is-outlined']) ?>
             </p>
+            <div id='fileprocess'></div>
         </div>
     </div>
 </div>
+<?php
+
+$uploadUrl = Url::toRoute(['files/create', 'dir' => $dir_id]);
+$token = Yii::$app->request->getCsrfToken();
+
+$script = <<<EOD
+	var f_total = 0;
+	var f_queue = 0;
+	function upload_one(data, fid){
+		var form = new FormData();
+		form.append("Uploads[files][]", '');
+		form.append("Uploads[files][]", data);
+        form.append("_csrf", '{$token}');
+		$('#fileprocess').append('<div>' + data.name + '<progress class="progress is-primary" id="files_' + fid + '" value="0" max="100"><span>' + data.name + '</span></progress></div>');
+		$.ajax({
+			xhr: function() {
+				var xhr = new window.XMLHttpRequest();
+				xhr.upload.addEventListener("progress", function(evt) {
+					if (evt.lengthComputable) {
+						var percentComplete = evt.loaded / evt.total;
+						percentComplete = parseInt(percentComplete * 100);
+						$('#files_'+fid).val(percentComplete);
+					}
+				}, false);
+				return xhr;
+			},
+			url: '{$uploadUrl}',
+			type: 'POST',
+			data: form,
+			processData: false,
+			contentType: false,
+			success: function(data){
+				if(data != 'false'){
+					$('#files_'+fid).removeClass('is-primary').addClass('is-success');
+				}else{
+					$('#files_'+fid).removeClass('is-primary').addClass('is-danger');
+				}
+                f_queue--;
+                if(f_queue == 0) location.reload();;
+			}
+		});
+	}
+	var obj = $("#fileIndex");
+	obj.on('dragenter', function (e){
+		e.stopPropagation();
+		e.preventDefault();
+		$(this).addClass('box');
+	});
+	obj.on('dragover', function (e){
+		e.stopPropagation();
+		e.preventDefault();
+		//$(this).css('border', 'none');
+	});
+	obj.on('drop', function (e){
+		$(this).css('border', 'none');
+		e.preventDefault();
+		var files = e.originalEvent.dataTransfer.files;
+		for(var i = 0; i < files.length; i++){
+			upload_one(files[i], f_total);
+			f_total++;
+			f_queue++;
+		}
+	});
+EOD;
+
+$this->registerJs($script, yii\web\view::POS_READY);

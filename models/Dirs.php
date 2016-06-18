@@ -112,4 +112,16 @@ class Dirs extends \yii\db\ActiveRecord
         while($model = $model->dir) $path = $model->name . '/' . $path;
         return $path;
     }
+
+    public function getParents()
+    {
+        $dirs = [];
+        $model = $this;
+        while($model != null){
+            $dirs[] = $model;
+            $model = $model->dir;
+        }
+        array_reverse($dirs);
+        return $dirs;
+    }
 }

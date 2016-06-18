@@ -7,20 +7,24 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\Dirs */
 
 $this->title = '修改資料夾';
-$this->params['breadcrumbs'][] = $this->title;
+foreach($dirs as $dir){
+    $this->params['breadcrumbs'][] = [
+        'label' => $dir->name,
+        'url' => ['/drive/index', 'path' => $dir->path]
+    ];
+}
+$this->params['breadcrumbs'][] = '修改';
 ?>
 <div class="dirs-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
 <div class="dirs-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Update', ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton('修改', ['class' => 'button is-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
