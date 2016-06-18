@@ -36,9 +36,8 @@ class FilesController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        Yii::$app->response->sendFile('uploads/' . $id)->send();
+        return;
     }
 
     /**

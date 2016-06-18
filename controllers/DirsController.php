@@ -30,18 +30,6 @@ class DirsController extends Controller
     }
 
     /**
-     * Displays a single Dirs model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
      * Creates a new Dirs model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
