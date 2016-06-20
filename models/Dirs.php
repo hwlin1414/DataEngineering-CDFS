@@ -124,4 +124,15 @@ class Dirs extends \yii\db\ActiveRecord
         array_reverse($dirs);
         return $dirs;
     }
+
+    public function addZip($zip, $path = ''){
+        $path = $path . $this->name;
+        $zip->addEmptyDir($path);
+        foreach($this->dirs as $dir){
+            $dir->addZip($zip, $path . '/');
+        }
+        foreach($this->files as $file){
+            $zip->addFile('../uploads/'.$file->id, $path . '/' . $file->name);
+        }
+    }
 }

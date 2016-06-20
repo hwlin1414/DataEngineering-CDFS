@@ -19,6 +19,17 @@ foreach($dirs as $dir){
 ?>
 <div class="files-index" id='fileIndex'>
     <div class="columns">
+        <div class="column is-4 is-offset-8">
+            <?= Html::beginForm(['/drive/index', 'path' => '/'], 'GET', ['csrf' => true]) ?>
+            <p class="control has-icon has-icon-right">
+                <?= Html::textInput('q', $q, ['class' => 'input']) ?>
+                <i class="fa fa-search"></i>
+            </p>
+            <?= Html::endForm() ?>
+        </div>
+    </div>
+
+    <div class="columns">
         <div class="column is-4">
             <nav class="panel">
               <p class="panel-heading">
@@ -42,6 +53,15 @@ foreach($dirs as $dir){
             'class' => 'button is-info is-outlined is-pulled-right',
             'data-method' => 'POST',
         ]);
+
+        echo Html::a('<i class="fa fa-download"></i>', [
+            '/dirs/download',
+            'id' => $subdir->id,
+        ], [
+            'class' => 'button is-success is-outlined is-pulled-right',
+            'data-method' => 'POST',
+        ]);
+
         echo Html::a($subdir->name, ['/drive/index', 'path' => $subdir->path], ['class' => 'panel-block']);
         //echo '</div>';
     }

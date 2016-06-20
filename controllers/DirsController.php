@@ -98,6 +98,19 @@ class DirsController extends Controller
         return $this->redirect(['/drive/index', 'path' => $path]);
     }
 
+    public function actionDownload($id)
+    {
+        $model = $this->findModel($id);
+
+        $zip = new \ZipArchive;
+        $zip->open('../uploads/'.$id.'.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $model->addZip($zip);
+        $zip->close();
+        
+        Yii::$app->response->sendFile('../uploads/' . $model->id . '.zip', $model->name . '.zip')->send();
+        return;
+    }
+
     /**
      * Finds the Dirs model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -25,25 +25,36 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-<nav class="nav has-shadow">
-    <div class="container">
-        <div class="nav-left">
-            <?= Html::a('Cloud Distributed Filesystem', ['/site/index'], ['class' => 'tag is-info is-large']) ?>
+    <nav class="nav has-shadow">
+        <div class="container">
+            <div class="nav-left">
+                <?= Html::a('Cloud Filesystem', ['/site/index'], ['class' => 'tag is-info is-large']) ?>
+            </div>
+    
+            <div class="nav-right nav-menu">
+                <?php
+                    if( !Yii::$app->user->isGuest)
+                        echo Html::a('Logout (' . Yii::$app->user->identity->name . ')', ['/site/logout'], ['class' => 'nav-item']);
+                ?>
+            </div>
         </div>
-
-        <div class="nav-right nav-menu">
-            <?php
-                if( !Yii::$app->user->isGuest)
-                    echo Html::a('Logout (' . Yii::$app->user->identity->name . ')', ['/site/logout'], ['class' => 'nav-item']);
-            ?>
+    </nav>
+    <div class="parallax">
+        <div class="parallax__group">
+            <div class="parallax__layer parallax__layer--back">
+                <div class="bgimg">
+                <?php //echo Html::img('@web/images/bg.jpg') ?>
+                </div>
+            </div>
+            <div class="parallax__layer parallax__layer--base">
+                <div class="container">
+                    <?= Breadcrumbs::widget([
+                        'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [''],
+                    ]) ?>
+                    <?= $content ?>
+                </div>
+            </div>
         </div>
-    </div>
-</nav>
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [''],
-        ]) ?>
-        <?= $content ?>
     </div>
 </div>
 
