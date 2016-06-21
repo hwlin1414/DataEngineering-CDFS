@@ -10,6 +10,7 @@ use app\models\search\Files as FilesSearch;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\UploadedFile;
 
 /**
@@ -37,7 +38,7 @@ class FilesController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionDownload($id)
     {
         $model = $this->findModel($id);
         Yii::$app->response->sendFile('../uploads/' . $id, $model->name)->send();
@@ -137,6 +138,9 @@ class FilesController extends Controller
     protected function findModel($id)
     {
         if (($model = Files::findOne($id)) !== null) {
+            if($model->user->id != Yii::$app->user->identity->id){
+                throw new ForbiddenHttpException('檔案禁止存取');
+            }
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

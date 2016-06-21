@@ -52,6 +52,12 @@ $config = [
                 'error/' => 'site/error',
                 'login/' => 'site/login',
                 'logout/' => 'site/logout',
+                'dirs/<id:\d+>' => 'dirs/download',
+                'dirs/update/<id:\d+>' => 'dirs/update',
+                'dirs/delete/<id:\d+>' => 'dirs/delete',
+                '<id:\d+>' => 'files/download',
+                'files/update/<id:\d+>' => 'files/update',
+                'files/delete/<id:\d+>' => 'files/delete',
             ],
         ],
         //*/

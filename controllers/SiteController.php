@@ -7,7 +7,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
+use app\models\Users;
 
 class SiteController extends Controller
 {
@@ -36,11 +36,21 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
+        $model2 = new Users();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
+        if ($model2->load(Yii::$app->request->post())){
+            if($model2->save()){
+                $model->username = $model2->name;
+                $model->password = $model2->password;
+                $model->login();
+                return $this->goBack();
+            }
+        }
         return $this->render('login', [
             'model' => $model,
+            'model2' => $model2,
         ]);
     }
 

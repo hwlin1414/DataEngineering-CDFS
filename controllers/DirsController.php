@@ -121,6 +121,9 @@ class DirsController extends Controller
     protected function findModel($id)
     {
         if (($model = Dirs::findOne($id)) !== null) {
+            if($model->user->id != Yii::$app->user->identity->id){
+                throw new ForbiddenHttpException('檔案禁止存取');
+            }
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

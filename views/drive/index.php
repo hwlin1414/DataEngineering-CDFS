@@ -79,7 +79,7 @@ foreach($dirs as $dir){
                         'format' => 'raw',
                         'value' => function ($model, $key, $index, $grid){
                             return Html::a($model->name, [
-                                '/files/view',
+                                '/files/download',
                                 'id' => $model->id,
                             ]);
                         }
