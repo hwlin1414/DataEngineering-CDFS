@@ -62,7 +62,7 @@ foreach($dirs as $dir){
             'data-method' => 'POST',
         ]);
 
-        echo Html::a($subdir->name, ['/drive/index', 'path' => $subdir->path], ['class' => 'panel-block']);
+        echo Html::a(Html::encode($subdir->name), ['/drive/index', 'path' => $subdir->path], ['class' => 'panel-block']);
         //echo '</div>';
     }
 ?>
